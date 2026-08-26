@@ -17,9 +17,6 @@ Run with:
     export ANLLMS_MODEL=gemini-flash   # optional, defaults below
     python -m chat.server
 Then open http://localhost:5000 in a browser.
-
-On Render (or any host that assigns its own port), the PORT environment
-variable is read automatically -- no code change needed per platform.
 """
 
 from __future__ import annotations
