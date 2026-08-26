@@ -1,16 +1,24 @@
 """
 Chat tools -- thin wrappers exposing existing anllms functionality
-(feed library search, requirements report) as Claude tool-use tools.
+(feed library search, requirements report) as LLM tool-use tools.
 
 NO new calculation logic lives here. Every function just calls something
 already built and tested elsewhere in this repo, then reshapes the result
 into a JSON-friendly dict for the LLM to read and relay to the user.
 
+TOOL_DEFINITIONS below stays in Anthropic's flat schema (name /
+description / input_schema) -- that's still the source of truth for
+each tool's shape. Since the migration to the LiteLLM proxy,
+chat/server.py reshapes this into OpenAI's nested {"type": "function",
+"function": {...}} format at request time via _to_openai_tools(), so
+this file doesn't need to know or care which wire format the model
+provider expects.
+
 SCOPE (matches the agreed v1 decision, since expanded): lactating dairy
 cows only. Covers DMI, energy (NEL), protein (MP), all 13 NASEM
 minerals, vitamins A/D/E, and water. Dry cows, heifers, and other
-species are still not covered -- the system prompt instructs Claude to
-say so rather than guess.
+species are still not covered -- the system prompt instructs the
+assistant to say so rather than guess.
 """
 
 from __future__ import annotations
