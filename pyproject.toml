@@ -16,7 +16,7 @@ dev = [
 ]
 chat = [
     "flask",
-    "anthropic",
+    "openai",
 ]
 
 [build-system]
