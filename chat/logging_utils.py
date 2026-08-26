@@ -1,14 +1,20 @@
 """
 Chat transcript logging -- opt-in, for test sessions.
 
-Also provides blocks_to_dicts(), which converts Anthropic SDK content
-blocks (TextBlock, ToolUseBlock, etc.) into plain JSON-serializable
-dicts. This exists because response.content from the SDK is a list of
-pydantic model objects, not plain dicts -- storing them directly in the
-message history and passing that to Flask's jsonify() will raise a
-TypeError on any turn that includes a tool call. blocks_to_dicts() is
-used both to fix that (see server.py) and to write log entries, so
-there's one place that does this conversion, not two.
+Also provides blocks_to_dicts(), which converts OpenAI-style SDK
+objects (ChatCompletionMessage, ChatCompletionMessageToolCall, etc.,
+as returned via the LiteLLM proxy) into plain JSON-serializable dicts.
+This exists because these are pydantic model objects, not plain dicts
+-- storing them directly in the message history and passing that to
+Flask's jsonify() will raise a TypeError on any turn that includes a
+tool call. blocks_to_dicts() is used both to fix that (see server.py)
+and to write log entries, so there's one place that does this
+conversion, not two.
+
+(Previously this wrapped Anthropic SDK content blocks -- TextBlock,
+ToolUseBlock, etc. -- before the migration to the LiteLLM proxy. The
+same duck-typed model_dump() check below works for both, since both
+SDKs use pydantic models.)
 
 TEST-PHASE LOGGING POLICY (current): logs ARE committed to the repo,
 by explicit project decision, because test sessions are verified to
