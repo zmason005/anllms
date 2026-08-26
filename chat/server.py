@@ -17,6 +17,9 @@ Run with:
     export ANLLMS_MODEL=gemini-flash   # optional, defaults below
     python -m chat.server
 Then open http://localhost:5000 in a browser.
+
+On Render (or any host that assigns its own port), the PORT environment
+variable is read automatically -- no code change needed per platform.
 """
 
 from __future__ import annotations
@@ -170,4 +173,4 @@ def chat():
 if __name__ == "__main__":
     if not os.environ.get("LITELLM_API_KEY") or not os.environ.get("LITELLM_BASE_URL"):
         print("WARNING: LITELLM_API_KEY / LITELLM_BASE_URL are not both set. The chat endpoint will fail.")
-    app.run(host="0.0.0.0", port=5000)
+    app.run(host="0.0.0.0", port=int(os.environ.get("PORT", 5000)))
